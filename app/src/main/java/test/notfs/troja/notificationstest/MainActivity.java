@@ -5,48 +5,69 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-
 public class MainActivity extends FragmentActivity {
 
     static final String TAG = "myLogs";
-    FragmentManager fm;
-//    FragmentTransaction ft;
-    TextView count;
+    static int PAGE_COUNT = 1;
 
     ViewPager pager;
     PagerAdapter pagerAdapter;
+    ImageButton plusBtn,minusBtn;
+    TextView count;
 
-
-    ImageButton plusButton,minusButton;
-
-    static final int PAGE_COUNT = 10;
-    FragmentOne fr1 = new FragmentOne();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        plusButton = findViewById(R.id.button_plus);
-        minusButton = findViewById(R.id.button_minus);
-        count = findViewById(R.id.count);
 
         pager = findViewById(R.id.pager);
-        pager.setAdapter(pagerAdapter);
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.setAdapter(pagerAdapter);
+        plusBtn = findViewById(R.id.button_plus);
+        minusBtn = findViewById(R.id.button_minus);
+        minusBtn.setVisibility(View.INVISIBLE);
+        count = findViewById(R.id.count);
+
+
+
+        plusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PAGE_COUNT +=1;
+                pagerAdapter.notifyDataSetChanged();
+                if (PAGE_COUNT > 1)
+                    minusBtn.setVisibility(View.VISIBLE);
+
+                count.setText(String.valueOf(pager.getCurrentItem()));
+            }
+        });
+
+        minusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PAGE_COUNT -=1;
+                pagerAdapter.notifyDataSetChanged();
+                if (PAGE_COUNT <= 1)
+                minusBtn.setVisibility(View.INVISIBLE);
+
+
+            }
+        });
+        pager.setOnPageChangeListener(new OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected, position = " + position);
+                count.setText(String.valueOf(position));
             }
 
             @Override
@@ -58,29 +79,11 @@ public class MainActivity extends FragmentActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
-
-        plusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                ft = getFragmentManager().beginTransaction();
-//                ft.replace(R.id.fragments, fr1);
-//                ft.addToBackStack("FragmentOne");
-//                ft.commit();
-            }
-        });
-
-        minusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
-
     }
+
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
-
-        public MyFragmentPagerAdapter(android.support.v4.app.FragmentManager fm) {
+        public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -92,11 +95,6 @@ public class MainActivity extends FragmentActivity {
         @Override
         public int getCount() {
             return PAGE_COUNT;
-        }
-        public CharSequence getPageTitle(int position) {
-            System.out.println(position);
-            return "Title " + position;
-
         }
 
     }
