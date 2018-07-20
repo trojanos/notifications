@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View v) {
                 PAGE_COUNT +=1;
                 pagerAdapter.notifyDataSetChanged();
-                if (PAGE_COUNT > 1)
+                if (PAGE_COUNT >= 1)
                     minusBtn.setVisibility(View.VISIBLE);
                 pager.setCurrentItem(PAGE_COUNT);
 
@@ -90,6 +90,13 @@ public class MainActivity extends FragmentActivity {
 
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
