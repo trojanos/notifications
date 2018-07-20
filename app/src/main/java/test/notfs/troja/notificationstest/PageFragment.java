@@ -38,26 +38,12 @@ public class PageFragment extends Fragment {
         pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
 
 
-
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        pageNumber = settings.getInt(SAVE_PAGE_NUMBER, 0);
-        Log.d("savedpage", "savedPageNumber = " + SAVE_PAGE_NUMBER);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(SAVE_PAGE_NUMBER, pageNumber);
-        Log.d("savedpage", "savedPageNumber = " + SAVE_PAGE_NUMBER);
-        editor.commit();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVE_PAGE_NUMBER, pageNumber);
     }
 
     @Override
@@ -90,4 +76,6 @@ public class PageFragment extends Fragment {
         });
         return view;
     }
+
+
 }
