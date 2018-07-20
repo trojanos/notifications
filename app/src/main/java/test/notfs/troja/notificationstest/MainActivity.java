@@ -1,28 +1,34 @@
 package test.notfs.troja.notificationstest;
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+
+
+
 public class MainActivity extends FragmentActivity {
 
-    static final String TAG = "myLogs";
     static int PAGE_COUNT = 1;
+    static int fromNotcount;
 
     ViewPager pager;
     PagerAdapter pagerAdapter;
-    ImageButton plusBtn,minusBtn;
+    ImageButton plusBtn, minusBtn;
     TextView count;
-
+    Button btnNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +42,7 @@ public class MainActivity extends FragmentActivity {
         minusBtn = findViewById(R.id.button_minus);
         minusBtn.setVisibility(View.INVISIBLE);
         count = findViewById(R.id.count);
-
-
+        btnNotification = findViewById(R.id.button_Create_notification);
 
         plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,8 +51,8 @@ public class MainActivity extends FragmentActivity {
                 pagerAdapter.notifyDataSetChanged();
                 if (PAGE_COUNT > 1)
                     minusBtn.setVisibility(View.VISIBLE);
+                pager.setCurrentItem(PAGE_COUNT);
 
-                count.setText(String.valueOf(pager.getCurrentItem()));
             }
         });
 
@@ -58,7 +63,7 @@ public class MainActivity extends FragmentActivity {
                 pagerAdapter.notifyDataSetChanged();
                 if (PAGE_COUNT <= 1)
                 minusBtn.setVisibility(View.INVISIBLE);
-
+                pager.setCurrentItem(PAGE_COUNT);
 
             }
         });
@@ -66,7 +71,6 @@ public class MainActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Log.d(TAG, "onPageSelected, position = " + position);
                 count.setText(String.valueOf(position));
             }
 
@@ -78,7 +82,13 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
             }
+
         });
+        fromNotcount = getIntent().getIntExtra("currentPage",0);
+        if (fromNotcount > 0) {
+            pager.setCurrentItem(fromNotcount);
+
+        }
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
